@@ -198,7 +198,7 @@
             return chart;
           }
           
-          ConferenceTracker.connect = function() {
+          ConferenceTracker.link = function() {
             for (var i=0;i<arguments.length;i++){
               for (var j=0;j<arguments.length;j++){
                 if (i != j) {
@@ -220,7 +220,7 @@
           function init() {
             ConferenceTracker.load();
             
-            ConferenceTracker.connect(
+            ConferenceTracker.link(
               ConferenceTracker.drawTable(),
               ConferenceTracker.drawMap(),
               ConferenceTracker.drawTimeline()
