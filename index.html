@@ -198,29 +198,33 @@
             return chart;
           }
           
-          ConferenceTracker.connect = function(first, second) {
-            google.visualization.events.addListener(first, 'select',
-              function() {
-                second.setSelection(first.getSelection());
+          ConferenceTracker.connect = function() {
+            for (var i=0;i<arguments.length;i++){
+              for (var j=0;j<arguments.length;j++){
+                if (i != j) {
+                  var source = arguments[i];
+                  var target = arguments[j];
+                  
+                  // NB: We have to build the callback using a closure in order to 
+                  // fix the source and target variables inside the callback.
+                  var callback = function(s, t) {
+                      return function() { t.setSelection(s.getSelection()); };
+                  }(source, target);
+                  
+                  google.visualization.events.addListener(source, 'select', callback);
+                }
               }
-            );
-            google.visualization.events.addListener(second, 'select',
-              function() {
-                first.setSelection(second.getSelection());
-              }
-            );
+            }
           }
           
           function init() {
             ConferenceTracker.load();
             
-            var table = ConferenceTracker.drawTable();
-            var map = ConferenceTracker.drawMap();
-            var timeline = ConferenceTracker.drawTimeline();
-            
-            ConferenceTracker.connect(table, map);
-            ConferenceTracker.connect(table, timeline);
-            ConferenceTracker.connect(timeline, map);
+            ConferenceTracker.connect(
+              ConferenceTracker.drawTable(),
+              ConferenceTracker.drawMap(),
+              ConferenceTracker.drawTimeline()
+            );
           }
     </script>
 
