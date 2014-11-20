@@ -126,9 +126,7 @@
           google.load('visualization', '1.0', {packages:['table','map','timeline']});
           google.setOnLoadCallback(init);
 
-          function draw(data) {
-            var mapOptions = {showTip:true, useMapTypeControl:true, mapType:'normal', enableScrollWheel:true};
-            
+          function drawTable(data) {
             var tableOptions = {'showRowNumber': true, 'allowHtml': true/*, 'cssClassNames': cssClassNames*/ };
             tableOptions['page'] = 'enable';
             tableOptions['pageSize'] = 10;
@@ -161,22 +159,29 @@
             
             var table = new google.visualization.Table(document.getElementById('table_div'));
             table.draw(tableView, tableOptions);
-
+            return table;
+          }
+        
+          function drawMap(data) {
+            var mapOptions = {showTip:true, useMapTypeControl:true, mapType:'normal', enableScrollWheel:true};
+          
             var geoView = new google.visualization.DataView(data);
             geoView.setColumns([6,7,{calc:tooltipify, type:'string', label:'Tooltip'}]);
             function tooltipify(dataTable, rowNum){
               var title = dataTable.getValue(rowNum, 0);
               var description = dataTable.getValue(rowNum, 1);
               var website = dataTable.getValue(rowNum, 8);
-              
+            
               return '<a href="'+website+'">'+title+'</a>: '+description;
             }
-            
+          
 
             var map = new google.visualization.Map(document.getElementById('map_div'));
             map.draw(geoView, mapOptions);
+            return map;
+          }
             
-            
+          function drawTimeline(data) {
             var chartView = new google.visualization.DataView(data);
             chartView.setColumns([0,4,5]);
             
@@ -187,31 +192,31 @@
                             barLabelStyle: {fontName: 'Ubuntu'} }
               };
             chart.draw(chartView, options);
-            
-            
-            google.visualization.events.addListener(table, 'select',
-                function() {
-                  console.log(table.getSelection());
-                  map.setSelection(table.getSelection());
-                  chart.setSelection(table.getSelection());
-                });
-
-            google.visualization.events.addListener(map, 'select',
-                function() {
-                  table.setSelection(map.getSelection());
-                  chart.setSelection(map.getSelection());
-                });
-            
-            google.visualization.events.addListener(chart, 'select',
-                function() {
-                  console.log(chart.getSelection());
-                  table.setSelection(chart.getSelection());
-                  map.setSelection(chart.getSelection());
-                });
+            return chart;
+          }
+          
+          function connect(first, second) {
+            google.visualization.events.addListener(first, 'select',
+              function() {
+                second.setSelection(first.getSelection());
+              }
+            );
+            google.visualization.events.addListener(second, 'select',
+              function() {
+                first.setSelection(second.getSelection());
+              }
+            );
           }
           
           function init() {
-            draw(load());
+            var data = load();
+            var table = drawTable(data);
+            var map = drawMap(data);
+            var timeline = drawTimeline(data);
+            
+            connect(table, map);
+            connect(table, timeline);
+            connect(timeline, map);
           }
     </script>
 
