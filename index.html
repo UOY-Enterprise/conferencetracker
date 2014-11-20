@@ -86,7 +86,9 @@
               }
           });
           
-          function load() {
+          var ConferenceTracker = ConferenceTracker || {};
+          
+          ConferenceTracker.load = function() {
             var data = new google.visualization.DataTable();
             //Setup table
             data.addColumn('string', 'Title');
@@ -126,7 +128,7 @@
           google.load('visualization', '1.0', {packages:['table','map','timeline']});
           google.setOnLoadCallback(init);
 
-          function drawTable(data) {
+          ConferenceTracker.drawTable = function(data) {
             var tableOptions = {'showRowNumber': true, 'allowHtml': true/*, 'cssClassNames': cssClassNames*/ };
             tableOptions['page'] = 'enable';
             tableOptions['pageSize'] = 10;
@@ -162,7 +164,7 @@
             return table;
           }
         
-          function drawMap(data) {
+          ConferenceTracker.drawMap = function(data) {
             var mapOptions = {showTip:true, useMapTypeControl:true, mapType:'normal', enableScrollWheel:true};
           
             var geoView = new google.visualization.DataView(data);
@@ -181,7 +183,7 @@
             return map;
           }
             
-          function drawTimeline(data) {
+          ConferenceTracker.drawTimeline = function(data) {
             var chartView = new google.visualization.DataView(data);
             chartView.setColumns([0,4,5]);
             
@@ -195,7 +197,7 @@
             return chart;
           }
           
-          function connect(first, second) {
+          ConferenceTracker.connect = function(first, second) {
             google.visualization.events.addListener(first, 'select',
               function() {
                 second.setSelection(first.getSelection());
@@ -209,14 +211,14 @@
           }
           
           function init() {
-            var data = load();
-            var table = drawTable(data);
-            var map = drawMap(data);
-            var timeline = drawTimeline(data);
+            var data = ConferenceTracker.load();
+            var table = ConferenceTracker.drawTable(data);
+            var map = ConferenceTracker.drawMap(data);
+            var timeline = ConferenceTracker.drawTimeline(data);
             
-            connect(table, map);
-            connect(table, timeline);
-            connect(timeline, map);
+            ConferenceTracker.connect(table, map);
+            ConferenceTracker.connect(table, timeline);
+            ConferenceTracker.connect(timeline, map);
           }
     </script>
 
