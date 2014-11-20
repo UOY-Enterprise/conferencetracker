@@ -14,8 +14,6 @@ ConferenceTracker.load = function(dataRows) {
   data.addColumn('string', 'Location');
   data.addColumn('date', 'Deadline');
   data.addColumn('date', 'Notification');
-  data.addColumn('number', 'Lat');
-  data.addColumn('number', 'Lon');
   data.addColumn('string','Website');
 
   var title, description, type, location, date, lat, lon, tooltip, website;
@@ -29,12 +27,9 @@ ConferenceTracker.load = function(dataRows) {
       deadline = new Date(dataRows[i].deadline);
       notification = new Date(dataRows[i].notification);
       website = dataRows[i].url
-      
-      lat = dataRows[i].latitude;
-      lon = dataRows[i].longitude;
 
       data.addRows([
-           [title, description, type, location, deadline, notification, lat, lon, website]
+           [title, description, type, location, deadline, notification, website]
       ]); 
   }
 }
@@ -56,7 +51,7 @@ ConferenceTracker.drawTable = function() {
   ]);
   function linkify(dataTable, rowNum){
     var title = dataTable.getValue(rowNum, 0);
-    var website = dataTable.getValue(rowNum, 8);
+    var website = dataTable.getValue(rowNum, 6);
     
     return website == null ? title : "\<a href=\"" + website + "\">" + title + "\</a>";
   }
@@ -87,11 +82,11 @@ ConferenceTracker.drawMap = function() {
   var mapOptions = {showTip:true, useMapTypeControl:true, mapType:'normal', enableScrollWheel:true};
 
   var geoView = new google.visualization.DataView(ConferenceTracker.data);
-  geoView.setColumns([6,7,{calc:tooltipify, type:'string', label:'Tooltip'}]);
+  geoView.setColumns([3,{calc:tooltipify, type:'string', label:'Tooltip'}]);
   function tooltipify(dataTable, rowNum){
     var title = dataTable.getValue(rowNum, 0);
     var description = dataTable.getValue(rowNum, 1);
-    var website = dataTable.getValue(rowNum, 8);
+    var website = dataTable.getValue(rowNum, 6);
   
     return '<a href="'+website+'">'+title+'</a>: '+description;
   }
