@@ -3,33 +3,31 @@ google.load('visualization', '1.0', {packages:['table','map','timeline']});
 var ConferenceTracker = ConferenceTracker || {};
 ConferenceTracker.data = null;
 
-ConferenceTracker.load = function(dataRows) {
+ConferenceTracker.load = function(data) {
   ConferenceTracker.data = new google.visualization.DataTable();
   
   //Setup table
-  var data = ConferenceTracker.data;
-  data.addColumn('string', 'Title');
-  data.addColumn('string', 'Description');
-  data.addColumn('string', 'Type');
-  data.addColumn('string', 'Location');
-  data.addColumn('date', 'Deadline');
-  data.addColumn('date', 'Notification');
-  data.addColumn('string','Website');
+  ConferenceTracker.data.addColumn('string', 'Title');
+  ConferenceTracker.data.addColumn('string', 'Description');
+  ConferenceTracker.data.addColumn('string', 'Type');
+  ConferenceTracker.data.addColumn('string', 'Location');
+  ConferenceTracker.data.addColumn('date', 'Deadline');
+  ConferenceTracker.data.addColumn('date', 'Notification');
+  ConferenceTracker.data.addColumn('string','Website');
 
   var title, description, type, location, date, lat, lon, tooltip, website;
 
+  for (var i=0;i<data.length;i++){
+      description = data[i].description;
+      title = data[i].title;
+      type = data[i].type;
+      location = data[i].location;
+      deadline = new Date(data[i].deadline);
+      notification = new Date(data[i].notification);
+      website = data[i].url
 
-  for (var i=0;i<dataRows.length;i++){
-      description = dataRows[i].description;
-      title = dataRows[i].title;
-      type = dataRows[i].type;
-      location = dataRows[i].location;
-      deadline = new Date(dataRows[i].deadline);
-      notification = new Date(dataRows[i].notification);
-      website = dataRows[i].url
-
-      data.addRows([
-           [title, description, type, location, deadline, notification, website]
+      ConferenceTracker.data.addRow([
+        title, description, type, location, deadline, notification, website
       ]); 
   }
 }
