@@ -91,23 +91,23 @@
             ConferenceTracker.load(dataRows);
             
             ConferenceTracker.link(
-              ConferenceTracker.drawTable(),
-              ConferenceTracker.drawMap(),
-              ConferenceTracker.drawTimeline()
+              ConferenceTracker.drawTable(document.getElementById('table')),
+              ConferenceTracker.drawMap(document.getElementById('map')),
+              ConferenceTracker.drawTimeline(document.getElementById('timeline'))
             );
           });
     </script>
 
     <div class="container">
       <div class="row">
-        <div class="col-md-12" id='table_div'></div>
+        <div class="col-md-12" id='table'></div>
       </div>
       <div class="spacer35"></div>
       <div class="row">
-        <div class="col-md-12" id="map_div" style="height: 400px"></div>
+        <div class="col-md-12" id="map" style="height: 400px"></div>
       </div>
       <div class="row">
-        <div class="col-md-12" id='timeline_div'></div>
+        <div class="col-md-12" id='timeline'></div>
       </div>
     </div> 
   </body>

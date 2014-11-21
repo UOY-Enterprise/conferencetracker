@@ -32,7 +32,7 @@ ConferenceTracker.load = function(data) {
   }
 }
 
-ConferenceTracker.drawTable = function() {
+ConferenceTracker.drawTable = function(domElement) {
   var tableOptions = {'showRowNumber': true, 'allowHtml': true/*, 'cssClassNames': cssClassNames*/ };
   tableOptions['page'] = 'enable';
   tableOptions['pageSize'] = 10;
@@ -71,12 +71,12 @@ ConferenceTracker.drawTable = function() {
     return dataTable.getValue(rowNum, 5).toLocaleDateString();
   }
   
-  var table = new google.visualization.Table(document.getElementById('table_div'));
+  var table = new google.visualization.Table(domElement);
   table.draw(tableView, tableOptions);
   return table;
 }
 
-ConferenceTracker.drawMap = function() {
+ConferenceTracker.drawMap = function(domElement) {
   var mapOptions = {showTip:true, useMapTypeControl:true, mapType:'normal', enableScrollWheel:true};
 
   var geoView = new google.visualization.DataView(ConferenceTracker.data);
@@ -90,16 +90,16 @@ ConferenceTracker.drawMap = function() {
   }
 
 
-  var map = new google.visualization.Map(document.getElementById('map_div'));
+  var map = new google.visualization.Map(domElement);
   map.draw(geoView, mapOptions);
   return map;
 }
   
-ConferenceTracker.drawTimeline = function() {
+ConferenceTracker.drawTimeline = function(domElement) {
   var chartView = new google.visualization.DataView(ConferenceTracker.data);
   chartView.setColumns([0,4,5]);
   
-  var chart = new google.visualization.Timeline(document.getElementById('timeline_div'));
+  var chart = new google.visualization.Timeline(domElement);
   
   var options = {
       timeline: { rowLabelStyle: {fontName: 'Ubuntu'},
