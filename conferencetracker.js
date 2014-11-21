@@ -1,19 +1,17 @@
 google.load('visualization', '1.0', {packages:['table','map','timeline']});
 
 var ConferenceTracker = ConferenceTracker || {};
-ConferenceTracker.data = null;
+ConferenceTracker.events = null;
 
 ConferenceTracker.load = function(data) {
-  ConferenceTracker.data = new google.visualization.DataTable();
-  
-  //Setup table
-  ConferenceTracker.data.addColumn('string', 'Title');
-  ConferenceTracker.data.addColumn('string', 'Description');
-  ConferenceTracker.data.addColumn('string', 'Type');
-  ConferenceTracker.data.addColumn('string', 'Location');
-  ConferenceTracker.data.addColumn('date', 'Deadline');
-  ConferenceTracker.data.addColumn('date', 'Notification');
-  ConferenceTracker.data.addColumn('string','Website');
+  ConferenceTracker.events = new google.visualization.DataTable();
+  ConferenceTracker.events.addColumn('string', 'Title');
+  ConferenceTracker.events.addColumn('string', 'Description');
+  ConferenceTracker.events.addColumn('string', 'Type');
+  ConferenceTracker.events.addColumn('string', 'Location');
+  ConferenceTracker.events.addColumn('date', 'Deadline');
+  ConferenceTracker.events.addColumn('date', 'Notification');
+  ConferenceTracker.events.addColumn('string','Website');
 
   var title, description, type, location, date, lat, lon, tooltip, website;
 
@@ -26,9 +24,9 @@ ConferenceTracker.load = function(data) {
       notification = new Date(data[i].notification);
       website = data[i].url
 
-      ConferenceTracker.data.addRow([
+      ConferenceTracker.events.addRow([
         title, description, type, location, deadline, notification, website
-      ]); 
+      ]);
   }
 }
 
@@ -40,7 +38,7 @@ ConferenceTracker.drawTable = function(domElement) {
   tableOptions['pagingButtonsConfiguration'] = 'auto';
   
 
-  var tableView = new google.visualization.DataView(ConferenceTracker.data);
+  var tableView = new google.visualization.DataView(ConferenceTracker.events);
   tableView.setColumns([
     {calc:linkify, type:'string', label:'Title'},
     1,2,3,
@@ -96,7 +94,7 @@ ConferenceTracker.drawMap = function(domElement) {
 }
   
 ConferenceTracker.drawTimeline = function(domElement) {
-  var chartView = new google.visualization.DataView(ConferenceTracker.data);
+  var chartView = new google.visualization.DataView(ConferenceTracker.events);
   chartView.setColumns([0,4,5]);
   
   var chart = new google.visualization.Timeline(domElement);
