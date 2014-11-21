@@ -33,7 +33,7 @@ ConferenceTracker.load = function(data) {
 }
 
 ConferenceTracker.drawTable = function(domElement) {
-  var tableOptions = {'showRowNumber': true, 'allowHtml': true/*, 'cssClassNames': cssClassNames*/ };
+  var tableOptions = {'showRowNumber': true, 'allowHtml': true };
   tableOptions['page'] = 'enable';
   tableOptions['pageSize'] = 10;
   tableOptions['pagingSymbols'] = {prev: 'prev', next: 'next'};
