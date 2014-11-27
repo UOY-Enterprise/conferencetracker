@@ -1,0 +1,27 @@
+{
+  "name": "conferencetracker",
+  "main": "conferencetracker.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/UOY-Enterprise/conferencetracker",
+  "authors": [
+    "Nikos Matragkas <nicholas.matragkas@york.ac.uk>",
+    "Dimitris Kolovos <dimitris.kolovos@york.ac.uk>",
+    "Louis Rose <louis.rose@york.ac.uk>"
+  ],
+  "description": "Visualisations for conference deadlines",
+  "keywords": [
+    "conference",
+    "conferences",
+    "academia",
+    "deadlines",
+    "events"
+  ],
+  "license": "EPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
