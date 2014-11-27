@@ -7,7 +7,6 @@ ConferenceTracker.load = function(data) {
   ConferenceTracker.events = new google.visualization.DataTable();
   ConferenceTracker.events.addColumn('string', 'Title');
   ConferenceTracker.events.addColumn('string', 'Description');
-  ConferenceTracker.events.addColumn('string', 'Type');
   ConferenceTracker.events.addColumn('string', 'Location');
   ConferenceTracker.events.addColumn('date', 'Deadline');
   ConferenceTracker.events.addColumn('date', 'Notification');
@@ -18,71 +17,88 @@ ConferenceTracker.load = function(data) {
   for (var i=0;i<data.length;i++){
       description = data[i].description;
       title = data[i].title;
-      type = data[i].type;
       location = data[i].location;
       deadline = new Date(data[i].deadline);
       notification = new Date(data[i].notification);
       website = data[i].url
 
       ConferenceTracker.events.addRow([
-        title, description, type, location, deadline, notification, website
+        title, description, location, deadline, notification, website
       ]);
   }
 }
 
-ConferenceTracker.drawTable = function(domElement) {
-  var tableOptions = {'showRowNumber': true, 'allowHtml': true };
-  tableOptions['page'] = 'enable';
-  tableOptions['pageSize'] = 10;
-  tableOptions['pagingSymbols'] = {prev: 'prev', next: 'next'};
-  tableOptions['pagingButtonsConfiguration'] = 'auto';
+ConferenceTracker.drawTable = function(domElement, removeStyling) {
+  removeStyling = typeof removeStyling !== 'undefined' ? removeStyling : false;
   
-
   var tableView = new google.visualization.DataView(ConferenceTracker.events);
   tableView.setColumns([
     {calc:linkify, type:'string', label:'Title'},
-    1,2,3,
+    1,2,
     {calc:statusify, type:'string', label:'Deadline'},
     {calc:dateify, type:'string', label:'Notification'}
   ]);
   function linkify(dataTable, rowNum){
     var title = dataTable.getValue(rowNum, 0);
-    var website = dataTable.getValue(rowNum, 6);
+    var website = dataTable.getValue(rowNum, 5);
     
     return website == null ? title : "\<a href=\"" + website + "\">" + title + "\</a>";
   }
   function statusify(dataTable, rowNum){
-    var deadline = dataTable.getValue(rowNum, 4);
+    var deadline = dataTable.getValue(rowNum, 3);
     var today = new Date();
     
+    var date = '<span class="date">' + deadline.toLocaleDateString() + '</span>';
+    
     if(Math.floor((deadline.getTime() - today.getTime())/(1000*60*60*24)) < 60 && Math.floor((deadline.getTime() - today.getTime())/(1000*60*60*24)) >0){
-      return deadline.toLocaleDateString() + '<span class="label label-warning">Soon</span>';
+      return date + '<span class="label label-warning">Soon</span>';
     }
     else if(Math.floor((deadline.getTime() - today.getTime())/(1000*60*60*24)) < 0 ){
-       return deadline.toLocaleDateString() + '<span class="label label-danger">Closed</span>';
+       return date + '<span class="label label-danger">Closed</span>';
     }
     else{
-      return deadline.toLocaleDateString() + '<span class="label label-success">Open</span>';
+      return date + '</span><span class="label label-success">Open</span>';
     }
   }
   function dateify(dataTable, rowNum){
-    return dataTable.getValue(rowNum, 5).toLocaleDateString();
+    return '<span class="date">' + dataTable.getValue(rowNum, 4).toLocaleDateString() + '</span>';
   }
   
   var table = new google.visualization.Table(domElement);
-  table.draw(tableView, tableOptions);
+  var cssClassNames = null;
+  
+  if (removeStyling) {
+    cssClassNames = {
+      headerRow: ' ',
+      tableRow: ' ',
+      oddTableRow: ' ',
+      headerCell: ' ',
+      tableCell: ' ',
+      rowNumberCell: ' '
+    }
+    
+    var removeGoogleClassFromTable = function(){
+      domElement.getElementsByTagName('table')[0].className = 'table';
+    }
+  
+    google.visualization.events.addListener(table, 'ready', removeGoogleClassFromTable);
+    google.visualization.events.addListener(table, 'sort', removeGoogleClassFromTable);
+  }
+  
+  table.draw(tableView, { allowHtml: true, cssClassNames: cssClassNames });
+  
   return table;
 }
 
 ConferenceTracker.drawMap = function(domElement) {
   var mapOptions = {showTip:true, useMapTypeControl:true, mapType:'normal', enableScrollWheel:true};
 
-  var geoView = new google.visualization.DataView(ConferenceTracker.data);
-  geoView.setColumns([3,{calc:tooltipify, type:'string', label:'Tooltip'}]);
+  var geoView = new google.visualization.DataView(ConferenceTracker.events);
+  geoView.setColumns([2,{calc:tooltipify, type:'string', label:'Tooltip'}]);
   function tooltipify(dataTable, rowNum){
     var title = dataTable.getValue(rowNum, 0);
     var description = dataTable.getValue(rowNum, 1);
-    var website = dataTable.getValue(rowNum, 6);
+    var website = dataTable.getValue(rowNum, 5);
   
     return '<a href="'+website+'">'+title+'</a>: '+description;
   }
@@ -95,7 +111,7 @@ ConferenceTracker.drawMap = function(domElement) {
   
 ConferenceTracker.drawTimeline = function(domElement) {
   var chartView = new google.visualization.DataView(ConferenceTracker.events);
-  chartView.setColumns([0,4,5]);
+  chartView.setColumns([0,3,4]);
   
   var chart = new google.visualization.Timeline(domElement);
   
