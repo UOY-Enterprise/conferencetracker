@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Conference Tracker</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    
+    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script src="../../conferencetracker.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+      
+    <style type="text/css">
+      body {
+        padding-top: 70px;
+      }
+      .date {
+        display: block;
+      }
+      #map, #table, #timeline {
+        margin: 1em;
+      }
+      #map, #timeline {
+        width: 100%;
+        height: 560px;
+        overflow: hidden;
+      }
+      #map img { 
+        max-width: none;
+      }
+      #map label { 
+        width: auto; display: inline; 
+      } 
+    </style>
+  </head>
+ 
+
+  <body>
+
+     <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Conference Tracker</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Conferences</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+      
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12" id="map"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12" id="table"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12" id="timeline"></div>
+      </div>
+    </div>
+
+    <script>
+          
+        var dataRows = JSON.parse('[ \
+          { \
+            "title": "FASE", \
+            "description": "FASE is concerned with the foundations on which software engineering is built. Submissions should focus on novel techniques and the way in which they contribute to making software engineering a more mature and soundly-based discipline.", \
+            "location": "London, UK", \
+            "deadline": "10/17/2014", \
+            "notification": "12/17/2014", \
+            "url": "http://www.etaps.org/index.php/2015/fase" \
+          }, \
+          { \
+            "title": "ICSE", \
+            "description": "ICSE is the premier software engineering conference, providing a forum for researchers, practitioners and educators to present and discuss the most recent innovations, trends, experiences and concerns in the field of software engineering.", \
+            "location": "Florence, Italy", \
+            "deadline": "09/05/2014", \
+            "notification": "12/20/2014", \
+            "url": "http://www.etaps.org/index.php/2015/fase" \
+          }, \
+          { \
+            "title": "ASE", \
+            "description": "The ACM/IEEE Automated Software Engineering (ASE) Conference series is the premier research forum for automated software engineering. Each year, it brings together researchers and practitioners from academia and industry to discuss foundations, techniques and tools for automating the analysis, design, implementation, testing, and maintenance of large software systems.", \
+            "location": "Lincoln, Nebraska, USA", \
+            "deadline": "05/15/2015", \
+            "notification": "07/01/2015", \
+            "url": "http://ase-conferences.org/" \
+          }, \
+          { \
+            "title": "FSE", \
+            "description": "FSE invites high quality submissions describing original and unpublished results of theoretical, empirical, conceptual, and experimental software engineering research. Contributions should describe innovative and significant original research relevant to the foundations of Software Engineering.", \
+            "location": "Milan, Italy", \
+            "deadline": "03/16/2015", \
+            "notification": "06/16/2015", \
+            "url": "http://fse22.gatech.edu/cfp/research" \
+          } \
+        ]');
+    
+        google.setOnLoadCallback(function() {
+            ConferenceTracker.load(dataRows);
+            
+            ConferenceTracker.link(
+              ConferenceTracker.drawTable(document.getElementById('table'), true),
+              ConferenceTracker.drawMap(document.getElementById('map')),
+              ConferenceTracker.drawTimeline(document.getElementById('timeline'))
+            );
+          });
+    </script>
+  </body>
+</html>
